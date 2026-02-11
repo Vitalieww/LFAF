@@ -1,18 +1,10 @@
 class FiniteAutomaton:
-    def __init__(self):
-        self.initial_state = 'S'
-        self.final_states = {'X'}  # This is the 'exit' state
-
-        # This is the map #variant 26
-        self.transitions = {
-            ('S', 'd'): 'A',
-            ('A', 'a'): 'B',
-            ('A', 'b'): 'X',
-            ('B', 'b'): 'C',
-            ('B', 'd'): 'X',
-            ('C', 'c'): 'B',
-            ('C', 'a'): 'A'
-        }
+    def __init__(self, states, alphabet, transitions, initial_state, final_states):
+        self.states = states  # States
+        self.alphabet = alphabet  # Alphabet
+        self.transitions = transitions  # Transitions: {(state, char): next_state}
+        self.initial_state = initial_state  # Initial state
+        self.final_states = final_states  # Final states
 
     def validate(self, input_string):
         current_state = self.initial_state
