@@ -91,7 +91,7 @@ if __name__ == "__main__":
         print(f"{s:<15} {str(ndfa_result):<10} {str(dfa_result):<10}")
 
     # ========================================
-    # 6. Draw graphs (optional, requires graphviz)
+    # 6. Draw graphs
     # ========================================
     print("\n" + "=" * 50)
     print("6. GRAPHICAL REPRESENTATION")
