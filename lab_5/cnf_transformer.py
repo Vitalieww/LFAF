@@ -21,9 +21,13 @@ class CNFTransformer:
                     continue
                 for rhs in rhss:
                     if rhs == tuple():
-                        nullable.add(A); changed = True; break
+                        nullable.add(A)
+                        changed = True
+                        break
                     if all(self._is_nonterminal(s) and s in nullable for s in rhs):
-                        nullable.add(A); changed = True; break
+                        nullable.add(A)
+                        changed = True
+                        break
 
         new_prods = defaultdict(set)
         for A, rhss in P.items():
@@ -36,17 +40,11 @@ class CNFTransformer:
                     for comb in combinations(positions, r):
                         rem = set(comb)
                         new_rhs = tuple(rhs[i] for i in range(len(rhs)) if i not in rem)
-                        new_prods[A].add(new_rhs)
+                        # Ensure no empty tuples make it into the new productions
+                        if new_rhs != tuple():
+                            new_prods[A].add(new_rhs)
+
         start = self.G.start
-        if start in nullable:
-            S0 = start + "_0"
-            self.G.Vn.add(S0)
-            new_prods[S0].add((start,))
-            new_prods[S0].add(tuple())
-            start = S0
-        for A in list(new_prods.keys()):
-            if A != start and tuple() in new_prods[A]:
-                new_prods[A].remove(tuple())
         return Grammar(self.G.Vn, self.G.Vt, new_prods, start)
 
     def remove_unit(self, G: Grammar) -> Grammar:
@@ -61,7 +59,8 @@ class CNFTransformer:
                     if len(rhs) == 1 and rhs[0] in G.Vn:
                         B = rhs[0]
                         if B not in visited:
-                            visited.add(B); q.append(B)
+                            visited.add(B)
+                            q.append(B)
             units[A] = visited
 
         newP = defaultdict(set)
@@ -81,7 +80,8 @@ class CNFTransformer:
                 for rhs in G.prods.get(A, set()):
                     for s in rhs:
                         if s in G.Vn and s not in reachable:
-                            reachable.add(s); changed = True
+                            reachable.add(s)
+                            changed = True
         newP = defaultdict(set)
         for A in reachable:
             for rhs in G.prods.get(A, set()):
@@ -99,7 +99,9 @@ class CNFTransformer:
                     continue
                 for rhs in rhss:
                     if all((s in G.Vt) or (s in productive) for s in rhs):
-                        productive.add(A); changed = True; break
+                        productive.add(A)
+                        changed = True
+                        break
         newP = defaultdict(set)
         for A in productive:
             for rhs in G.prods[A]:
